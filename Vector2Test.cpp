@@ -17,8 +17,18 @@ class Vector2Test:
     using  Vector2i = Vector2<int>;
     using  limitf = std::numeric_limits<float>;
 
-    std::vector<Vector2f> float_cases;
-    std::vector<Vector2i> int_cases;
+    std::vector<Vector2f> r_float_cases;
+
+    Vector2Test()
+    {
+        for(int i=0; i<N_TESTS; ++i)
+        {
+            float x = getRandomFloat();
+            float y = getRandomFloat();
+
+            r_float_cases.push_back(Vector2f(x, y));
+        } 
+    }
 
     float getRandomFloat()
     {
@@ -27,71 +37,59 @@ class Vector2Test:
 
     protected:
 
-        virtual void SetUp()
-        {
-            float_cases.reserve(N_TESTS);
-            int_cases.reserve(N_TESTS);
-        };
+        virtual void SetUp(){};
 
-        virtual void TearDown()
-        {
-            float_cases.clear();
-            int_cases.clear();
-        };
-
+        virtual void TearDown(){};
 };
 
 TEST_F(Vector2Test, DefaultConstructorTest)
 {
-    for(int i = 0; i<N_TESTS; ++i)
-    {
-        float_cases.push_back(Vector2f());
-        int_cases.push_back(Vector2i());
+    std::vector<Vector2f> z_float_cases(N_TESTS);
 
-        ASSERT_EQ(int_cases[i].x, float_cases[i].x)
-            <<"Vector2 was not initialized to zero: x-coordinate at index "<<i;
+    for(auto& p:z_float_cases)
+    {
+
+        ASSERT_EQ(0, p.x)
+            <<"Vector2 was not initialized to zero";
         
-        ASSERT_EQ(int_cases[i].y, float_cases[i].y)
-            <<"Vector2 was not initialized to zero: y-coordinate at index "<<i;
+        ASSERT_EQ(0, p.y)
+            <<"Vector2 was not initialized to zero";
     }
 }
 
 TEST_F(Vector2Test, ConstructorTest)
 {
-    for(int i=0; i<N_TESTS; ++i)
-    {
-        
-        float x = getRandomFloat();
-        float y = getRandomFloat();
-        
-        Vector2f p(x,y);
-
-        ASSERT_EQ(x, p.x);
-        ASSERT_EQ(y, p.y);
-
-        p.x = getRandomFloat();
-        p.y = getRandomFloat();
-
-        EXPECT_NE(x, p.x);
-        EXPECT_NE(y, p.y);
-    } 
-}
-
-TEST_F(Vector2Test, CopyConstructorTest)
-{
     for(int i = 0; i<N_TESTS; ++i)
     {
         float x = getRandomFloat();
         float y = getRandomFloat();
+        Vector2f p(x, y);
 
-        float_cases.push_back(Vector2f(x, y));
+        ASSERT_EQ(x, p.x);
+        ASSERT_EQ(y, p.y);         
     }
+}
 
-    for(auto& p1:float_cases)
+TEST_F(Vector2Test, CopyConstructorTest)
+{
+    std::vector<Vector2f> float_cases(r_float_cases);
+
+    for(int i=0; i< N_TESTS; ++i)
     {
-        Vector2f p2(p1);
+        ASSERT_EQ(float_cases[i].x, r_float_cases[i].x);
+        ASSERT_EQ(float_cases[i].y, r_float_cases[i].y);
+    }
+}
+
+TEST_F(Vector2Test, CopyAssignmentTest)
+{    
+    for(auto& p1:r_float_cases)
+    {
+        Vector2f p2;
+        p2 = p1;
 
         ASSERT_EQ(p1.x, p2.x);
         ASSERT_EQ(p1.y, p2.y);
-    }
+    }  
 }
+
