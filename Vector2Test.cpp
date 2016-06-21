@@ -26,6 +26,7 @@ class Vector2Test:
     }   
 
     protected:
+
         virtual void SetUp()
         {
             float_cases.reserve(N_TESTS);
@@ -47,8 +48,11 @@ TEST_F(Vector2Test, DefaultConstructorTest)
         float_cases.push_back(Vector2f());
         int_cases.push_back(Vector2i());
 
-        ASSERT_EQ(int_cases[i].x, float_cases[i].x);
-        ASSERT_EQ(int_cases[i].y, float_cases[i].y);
+        ASSERT_EQ(int_cases[i].x, float_cases[i].x)
+            <<"Vector2 was not initialized to zero: x-coordinate at index "<<i;
+        
+        ASSERT_EQ(int_cases[i].y, float_cases[i].y)
+            <<"Vector2 was not initialized to zero: y-coordinate at index "<<i;
     }
 }
 
@@ -64,6 +68,12 @@ TEST_F(Vector2Test, ConstructorTest)
 
         ASSERT_EQ(x, p.x);
         ASSERT_EQ(y, p.y);
+
+        p.x = getRandomFloat();
+        p.y = getRandomFloat();
+
+        EXPECT_NE(x, p.x);
+        EXPECT_NE(y, p.y);
     } 
 }
 
@@ -83,6 +93,5 @@ TEST_F(Vector2Test, CopyConstructorTest)
 
         ASSERT_EQ(p1.x, p2.x);
         ASSERT_EQ(p1.y, p2.y);
-        ASSERT_NE(&p1, &p2);
     }
 }
